@@ -12,7 +12,11 @@ class RememberQueryStrings
             return $next($request);
         }
 
-        if (empty($request->all())) {
+        $queryFiltered = array_filter($request->all(), function ($key) {
+            return ! str_starts_with($key, '/');
+        }, ARRAY_FILTER_USE_KEY);
+        
+        if (empty($queryFiltered)) {
             return $this->remembered($next, $request);
         }
 
